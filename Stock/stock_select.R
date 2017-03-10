@@ -1,17 +1,22 @@
-#Example codes
-
-##### Global Variable #####
-
-fromDate = "2016-06-01"
+# Example codes
+# To get close price of some company, and then calculate field divide.
+# and finally, you can refer to output object, to determine what is purchase price
 
 ##### Load Quantitative Financial Modelling & Trading Framework #####
 library(quantmod)
+##### Global Variable #####
+fromDate <- "2016-12-01"
+stockSrc <- "yahoo"
+company <- "1460.TW"
 
-#2017/03/08 refer to https://woodstar-woodstar.blogspot.tw/2016/04/r.html
+# Get Close Price
+s1460 = Cl(getSymbols(company, from = fromDate, src = stockSrc, auto.assign=FALSE))
+# Get dividend Yield
+dividends = getDividends(company, from = "2015-01-01",src = stockSrc, auto.assign = FALSE)
+names(dividends)[1] <- "Dividend"
+averageDivide = as.vector(dividends$Dividend)
+closePrice <- Cl(getSymbols(company, from = fromDate ,auto.assign=FALSE))
+output <- cbind(closePrice, c(coredata(mean(averageDivide))) / closePrice)
+names(z)[2]<-"Dividend"
 
-#宏遠興業
-s1460 = getSymbols('1460.TW', from = fromDate, src="yahoo", auto.assign=FALSE)
-chartSeries(s1460, subset='last 3 months')
-
-#宏遠興業-每日殖利率
-d1460 = getDividends('1460.TW', from = fromDate,src = "yahoo", auto.assign = FALSE)
+chartSeries(output, subset='last 3 months')
