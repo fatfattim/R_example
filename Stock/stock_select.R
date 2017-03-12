@@ -9,14 +9,18 @@ fromDate <- "2016-12-01"
 stockSrc <- "yahoo"
 company <- "1460.TW"
 
-# Get Close Price
-s1460 = Cl(getSymbols(company, from = fromDate, src = stockSrc, auto.assign=FALSE))
 # Get dividend Yield
 dividends = getDividends(company, from = "2015-01-01",src = stockSrc, auto.assign = FALSE)
 names(dividends)[1] <- "Dividend"
-averageDivide = as.vector(dividends$Dividend)
-closePrice <- Cl(getSymbols(company, from = fromDate ,auto.assign=FALSE))
-output <- cbind(closePrice, c(coredata(mean(averageDivide))) / closePrice)
-names(z)[2]<-"Dividend"
+averageDivide = mean(as.vector(dividends$Dividend))
 
-chartSeries(output, subset='last 3 months')
+# Get Close Price
+closePrice <- Cl(getSymbols(company, from = fromDate ,auto.assign=FALSE))
+names(closePrice)[1] <- "Close"
+averageclosePrice = mean(as.vector(closePrice$Close))
+output <- cbind(closePrice, c(coredata(averageDivide)) / closePrice)
+standardDeviation <- sd(as.vector(output$Close))
+ReasonablePrice <- averageclosePrice - standardDeviation
+SellingPrice <- averageclosePrice + standardDeviation
+names(output)[2]<-"Dividend"
+
