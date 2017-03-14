@@ -22,7 +22,7 @@ doc_string <- as.character(haha)
 # 1. Parse document of element
 # 2. Create matrix that contains 5 columns
 
-getResult <- function(doc_string) {
+getOriginalResult <- function(doc_string) {
   doc <- htmlParse(doc_string,asText=T)
   id_or_class_xp <- "//div[@id='tbl-containerx']//text()"
   
@@ -38,12 +38,15 @@ getResult <- function(doc_string) {
   while (x <= length(stockTableResult)) { 
     result <- rbind(result, stockTableResult[x:(x+4)])
     x <- x + 5
-  }  
+  }
+  #Chinese
   colnames(result) <- c(stockTableResult[1:5])
-  
+  #English
+  colnames(result) <- c("code", "stock", "PE", "DividendYield", "PBR")
   return(result)
 }
 
-result <- getResult(doc_string)
-
-head(result, n = 20)
+result <- getOriginalResult(doc_string)
+df <- data.frame(result)
+ddd <- df[!grepl("-", df$本益比),]
+#remove Price-Earnings Ratio(P/E、PER) < 0
