@@ -18,21 +18,32 @@ fd <- list(
 resp<-POST(url, body=fd, encode="form")
 haha <- content(resp, encoding = "big-5")
 doc_string <- as.character(haha)
-doc <- htmlParse(doc_string,asText=T)
-id_or_class_xp <- "//div[@id='tbl-containerx']//text()"
 
-#These functions provide a way to find XML nodes that match a particular criterion.
-stockTableResult <- xpathSApply(doc, id_or_class_xp, xmlValue)
-#remove useless description
-stockTableResult <- stockTableResult[-1]
-#remove \n
-stockTableResult <- stockTableResult[ - which(stockTableResult %in% "\n")]
-x <- 1
-result <- c(stockTableResult[x:(x+4)])
-x <- 6
-while (x <= length(stockTableResult)) { 
-  result <- rbind(result, stockTableResult[x:(x+4)])
+# 1. Parse document of element
+# 2. Create matrix that contains 5 columns
+
+getResult <- function(doc_string) {
+  doc <- htmlParse(doc_string,asText=T)
+  id_or_class_xp <- "//div[@id='tbl-containerx']//text()"
+  
+  #These functions provide a way to find XML nodes that match a particular criterion.
+  stockTableResult <- xpathSApply(doc, id_or_class_xp, xmlValue)
+  #remove useless description
+  stockTableResult <- stockTableResult[-1]
+  #remove \n
+  stockTableResult <- stockTableResult[ - which(stockTableResult %in% "\n")]
+  x <- 6
+  result <- c(stockTableResult[x:(x+4)])
   x <- x + 5
-}  
+  while (x <= length(stockTableResult)) { 
+    result <- rbind(result, stockTableResult[x:(x+4)])
+    x <- x + 5
+  }  
+  colnames(result) <- c(stockTableResult[1:5])
+  
+  return(result)
+}
+
+result <- getResult(doc_string)
 
 head(result, n = 20)
