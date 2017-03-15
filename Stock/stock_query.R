@@ -15,7 +15,7 @@ fd <- list(
   login_btn = "(unable to decode value)"
 )
 
-resp<-POST(url, body=fd, encode="form")
+resp <- POST(url, body=fd, encode="form")
 haha <- content(resp, encoding = "big-5")
 doc_string <- as.character(haha)
 
@@ -48,5 +48,17 @@ getOriginalResult <- function(doc_string) {
 
 result <- getOriginalResult(doc_string)
 df <- data.frame(result)
-ddd <- df[!grepl("-", df$本益比),]
-#remove Price-Earnings Ratio(P/E、PER) < 0
+
+removeDebtStock <- function(df) {
+  return(df[!grepl("-", df$PE),])
+}
+
+getQuickReturnStock <- function(df, boundaryValue) {
+  #noDebtStock$PE is factors class
+  return(df[which(as.numeric(as.character(noDebtStock$PE)) < boundaryValue),])
+}
+
+noDebtStock <- removeDebtStock(df)
+
+quickReturnStock <- getQuickReturnStock(noDebtStock, as.numeric(15))
+
