@@ -7,7 +7,7 @@ library(quantmod)
 ##### Global Variable #####
 fromDate <- "2016-12-01"
 stockSrc <- "yahoo"
-company <- "1460.TW"
+company <- "2498.TW"
 
 appendDivideField <- function(company, stockSrc, fromDate) {
   # Get dividend Yield
@@ -34,5 +34,28 @@ getPrices <- function(company, stockSrc, fromDate) {
   return(output)
 }
 
+getVolume <- function(company, stockSrc, fromDate) {
+  closePrice <- getSymbols(company, from = fromDate ,auto.assign=FALSE)
+  #keep close and volume
+  closePrice <- closePrice[,(4:5)]
+  names(closePrice)[1] <- "Close"
+  names(closePrice)[2] <- "Volume"
+  #remove volume == 0
+  closePrice <- closePrice[which(closePrice$Volume > 0),]
+  
+  #append percent data
+  colClose <- closePrice[, "Close", drop = FALSE]
+  n <- nrow(closePrice)
+  colClose <- as.vector(colClose[1:n, 1])
+  sbux_ret <- ((colClose[2:n] - colClose[1:(n-1)]) / colClose[1:(n-1)])
+
+  #remove first item since not have previous data
+  closePrice <- closePrice[-1]
+  closePrice <- cbind(closePrice, c(coredata(sbux_ret[1:n - 1])))
+  names(output)[3] <- "Percent"
+  return(closePrice)
+}
+
 outputDivide <- appendDivideField(company, stockSrc, fromDate)
 outputPrice <- getPrices(company, stockSrc, fromDate)
+outputVolume <- getVolume(company, stockSrc, fromDate)
