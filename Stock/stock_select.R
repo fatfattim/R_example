@@ -5,9 +5,9 @@
 ##### Load Quantitative Financial Modelling & Trading Framework #####
 library(quantmod)
 ##### Global Variable #####
-fromDate <- "2016-12-01"
+fromDate <- "2017-02-10"
 stockSrc <- "yahoo"
-company <- "2498.TW"
+company <- "2324.TW"
 
 appendDivideField <- function(company, stockSrc, fromDate) {
   # Get dividend Yield

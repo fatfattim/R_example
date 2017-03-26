@@ -6,7 +6,7 @@
 library(quantmod)
 ##### Global Variable #####
 stockSrc <- "yahoo"
-company <- "1460.TW"
+company <- "2324.TW"
 
 getPrices <- function(company, stockSrc, closePrice) {
   # Get Close Price
@@ -15,7 +15,7 @@ getPrices <- function(company, stockSrc, closePrice) {
   standardDeviation <- sd(as.vector(closePrice$Close))
   ReasonablePrice <- averageclosePrice - standardDeviation
   SellingPrice <- averageclosePrice + standardDeviation
-  output<-list(ReasonablePrice = averageclosePrice - standardDeviation, SellingPrice = averageclosePrice + standardDeviation)
+  output<-list(ReasonablePrice = averageclosePrice - standardDeviation + 0.5, SellingPrice = averageclosePrice + standardDeviation)
   return(output)
 }
 
@@ -42,8 +42,7 @@ getResult <- function(closePrice, profit, loss, purchasedItems) {
 
 # Backtesting 30 days
 # TODO need to get trade day, not everyday
-backTesting <- function(profit, loss) {
-  days <- 10
+backTesting <- function(days, profit, loss) {
   duration <- seq(Sys.Date() - days, length = days, by = "1 days")
   purchasedItems <- vector(mode="numeric", length=0)
   result <- 0
@@ -56,6 +55,9 @@ backTesting <- function(profit, loss) {
     #outputPrice[1] is Reasonable price
     x <- as.vector(closePrice$Close)
     priceOfToday <- x[length(x)]
+    
+    print(reasonablePrice)
+    print(priceOfToday)
     if(priceOfToday < reasonablePrice) {
       print(duration[i])
       print(paste("close price", priceOfToday))
@@ -73,16 +75,7 @@ backTesting <- function(profit, loss) {
   return(result)
 }
 
-x <- vector(mode="numeric", length=0)
-
-
-x[1] <- 10
-x[2] <- 20
-x[3] <- 30
-hah <- getResult(10, 0.4, -0.2, x)
-hah$Sum
-
-y <- backTesting(0.01, -0.03)
+y <- backTesting(30, 0.02, -0.10)
 
 
 
