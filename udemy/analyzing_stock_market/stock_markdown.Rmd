@@ -1,0 +1,18 @@
+---
+title: "stock_markdown"
+author: "timchen"
+date: "2017/4/16"
+output: html_document
+---
+
+Taiwan Stock
+========================================================
+```{r echo=TRUE, results='hide', message=FALSE}
+library(quantmod)
+getSymbols('1464.TW', src='yahoo')
+```
+My setup on GSPC
+```{r}
+chartSeries(`1464.TW`, theme="white",
+TA="addVo();addBBands();addCCI()", subset='2016')
+```
