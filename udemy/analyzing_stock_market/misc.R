@@ -28,7 +28,11 @@ lineChart(`1460.TW`, line.type = 'h', theme = 'white')
 barChart(`1464.TW`, bar.type = 'hlc', TA = NULL)
 candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL)
 candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL, subset = '2017-02')
-candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL, subset = '2017-02::2017-03')
-candleChart(`1464.TW`, theme = chartTheme('white', up.col='red', dn.col='green'), TA = NULL, subset = '2017-02::2017-03')
+candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL, subset = '2017-02::2017-04-13')
+candleChart(`1464.TW`, theme = chartTheme('white', up.col='red', dn.col='green'), TA = NULL, subset = '2017-02::2017-04')
 chartSeries(`1464.TW`, type = c("matchsticks"), TA = NULL, subset = '2017-02::2017-03')
+
+
+##### Chapter 6 : Creating great charts with quantmod #####
+
 
