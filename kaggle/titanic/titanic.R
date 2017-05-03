@@ -1,38 +1,23 @@
+##### Load Data from csv #####
+train <- read.csv('~/Project/R_example/kaggle/titanic/train.csv', stringsAsFactors = F)
+test  <- read.csv('~/Project/R_example/kaggle/titanic/test.csv', stringsAsFactors = F)
 
-#Course 2
-plot(c(1,2,3,4), c(5,6,7,8))
+summary(train$Survived)
 
-##### Load Quantitative Financial Modelling & Trading Framework #####
-library(quantmod)
-##### Global Variable #####
-fromDate <- "2017-01-01"
-stockSrc <- "yahoo"
-company <- "1464.TW"
+#Suvived v.s Not Survived
+sum(train$Survived==1) / sum(train$Survived==0)
 
-##### Chapter 2 : Downloading Stock #####
-stock <- getSymbols(company, from = fromDate, src = stockSrc, auto.assign=FALSE)
-summary(stock)
-class(stock)
+sum(is.na(train$Age))
 
-basket_symbols <- c('1464.TW', '1460.TW')
-getSymbols(basket_symbols, from = fromDate, src = stockSrc)
-summary(`1460.TW`)
+#### To check which column has missing data, Age column ####
+for(i in 1:ncol(train)) {
+  row <- train[, i]
+  # do stuff with row
+  if(sum(is.na(row)) > 0) {
+    print(colnames(train[i]))
+  }
+}
 
-#Merge basket symbols to new xts & zoo object
-basket <- data.frame(as.xts(merge(`1460.TW`, `1464.TW`)))
-
-##### Chapter 3 : Creating great charts with quantmod #####
-getSymbols(company, from = fromDate, src = stockSrc)
-plot(`1464.TW`)
-lineChart(`1460.TW`, line.type = 'h', theme = 'white')
-barChart(`1464.TW`, bar.type = 'hlc', TA = NULL)
-candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL)
-candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL, subset = '2017-02')
-candleChart(`1464.TW`, bar.type = 'hlc', TA = NULL, subset = '2017-02::2017-04-13')
-candleChart(`1464.TW`, theme = chartTheme('white', up.col='red', dn.col='green'), TA = NULL, subset = '2017-02::2017-04')
-chartSeries(`1464.TW`, type = c("matchsticks"), TA = NULL, subset = '2017-02::2017-03')
-
-
-##### Chapter 6 : Creating great charts with quantmod #####
+missingAge <- subset(train, is.na(train$Age))
 
 
